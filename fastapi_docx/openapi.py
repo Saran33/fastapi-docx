@@ -38,9 +38,9 @@ def custom_openapi(
         `HTTPExcSchema`: The schema for fastAPI/starlette HTTPExceptions raised by the app.
                          Defaults to one field: `detail: Optional[str]`
         `dependencyClasses`: A tuple of classes that represent dependencies for the app's routes.
-                             You can subclass all dependencies and pass only the base e.g. `dependencyClasses=[BaseDependency]`
+                             You can subclass all dependencies and pass only the base e.g. `dependencyClasses=(BaseDependency,)`
         `serviceClasses`: A tuple of classes that represent service classes for the app's routes.
-                          You can subclass all services and pass only the base e.g. `serviceClasses=[BaseService]`
+                          You can subclass all services and pass only the base e.g. `serviceClasses=(BaseService,)`
     Returns:
         A callable that returns the modified OpenAPI specification as a dictionary or else None.
     """
