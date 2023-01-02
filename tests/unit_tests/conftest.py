@@ -425,3 +425,250 @@ def services_openapi_schema(
     }
     _openapi_schema["components"] = openapi_schema_components.copy()
     return _openapi_schema
+
+
+@pytest.fixture(scope="module")
+def dependencies_openapi_schema(
+    openapi_schema_base: dict[str, Any], openapi_schema_components: dict[str, Any]
+) -> dict[str, Any]:
+    _openapi_schema = openapi_schema_base.copy()
+    _openapi_schema["paths"] = {
+        "/api/v1/me": {
+            "get": {
+                "summary": "Get User",
+                "operationId": "get_user_api_v1_me_get",
+                "parameters": [
+                    {
+                        "required": True,
+                        "schema": {"title": "User In"},
+                        "name": "user_in",
+                        "in": "query",
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {"application/json": {"schema": {}}},
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        },
+                    },
+                    "404": {
+                        "description": "User not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPExceptionSchema"
+                                }
+                            }
+                        },
+                    },
+                    "420": {
+                        "description": "TooManyRequests",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AppExecptionSchema"
+                                }
+                            }
+                        },
+                    },
+                    "403": {
+                        "description": "Could not validate credentials",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPExceptionSchema"
+                                }
+                            }
+                        },
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AppExecptionSchema"
+                                }
+                            }
+                        },
+                    },
+                },
+            },
+            "put": {
+                "summary": "Update User",
+                "operationId": "update_user_api_v1_me_put",
+                "parameters": [
+                    {
+                        "required": True,
+                        "schema": {"title": "User In"},
+                        "name": "user_in",
+                        "in": "query",
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {"application/json": {"schema": {}}},
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        },
+                    },
+                    "404": {
+                        "description": "User not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPExceptionSchema"
+                                }
+                            }
+                        },
+                    },
+                    "420": {
+                        "description": "TooManyRequests",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AppExecptionSchema"
+                                }
+                            }
+                        },
+                    },
+                    "403": {
+                        "description": "Could not validate credentials",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPExceptionSchema"
+                                }
+                            }
+                        },
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AppExecptionSchema"
+                                }
+                            }
+                        },
+                    },
+                },
+            },
+            "post": {
+                "summary": "Create User",
+                "operationId": "create_user_api_v1_me_post",
+                "parameters": [
+                    {
+                        "required": True,
+                        "schema": {"title": "User In"},
+                        "name": "user_in",
+                        "in": "query",
+                    },
+                    {
+                        "required": False,
+                        "schema": {"title": "Kwarg", "type": "string", "default": ""},
+                        "name": "kwarg",
+                        "in": "query",
+                    },
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {"application/json": {"schema": {}}},
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        },
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPExceptionSchema"
+                                }
+                            }
+                        },
+                    },
+                },
+            },
+            "delete": {
+                "summary": "Delete User",
+                "operationId": "delete_user_api_v1_me_delete",
+                "parameters": [
+                    {
+                        "required": True,
+                        "schema": {"title": "User Id", "type": "integer"},
+                        "name": "user_id",
+                        "in": "query",
+                    },
+                    {
+                        "required": True,
+                        "schema": {"title": "Id", "type": "integer"},
+                        "name": "id",
+                        "in": "query",
+                    },
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {"application/json": {"schema": {}}},
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        },
+                    },
+                    "407": {
+                        "description": "Some other error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPExceptionSchema"
+                                }
+                            }
+                        },
+                    },
+                    "444": {
+                        "description": "ConnectionClosed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AppExecptionSchema"
+                                }
+                            }
+                        },
+                    },
+                },
+            },
+        }
+    }
+    _openapi_schema["components"] = openapi_schema_components.copy()
+    return _openapi_schema

@@ -77,3 +77,6 @@ class TestServExc(OpenApiTest):
         self.check_openapi_response_schema(
             services_openapi_schema, expected_excs, path=""
         )
+
+
+# TestServExc().setup_method()  # Run this to generate openapi docs in browser
