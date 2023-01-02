@@ -1,0 +1,31 @@
+on: push
+
+env:
+  PRE_COMMIT_COLOR: "always"
+
+jobs:
+  pre_commit_hooks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: setup python
+        uses: ./.github/actions/setup-python
+      - run: make venv-install
+      - run: make mypy
+      - run: make pre-commit-run
+
+  unit_tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: setup python
+        uses: ./.github/actions/setup-python
+      - run: make venv-install
+      - run: make unit-tests-with-cov COV_REPORT_FORMAT=xml
+      - name: Upload Coverage Report
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage_upload
+          path: coverage_report
