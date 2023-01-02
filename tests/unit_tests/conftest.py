@@ -1,8 +1,10 @@
+from typing import Any
+
 import pytest
 
 
 @pytest.fixture(scope="module")
-def openapi_schema_base():
+def openapi_schema_base() -> dict[str, Any]:
     return {
         "openapi": "3.0.2",
         "info": {"title": "FastAPI", "version": "0.1.0"},
@@ -19,7 +21,7 @@ def openapi_schema_base():
 
 
 @pytest.fixture(scope="module")
-def openapi_schema_simple(openapi_schema_base):
+def openapi_schema_simple(openapi_schema_base: dict[str, Any]) -> dict[str, Any]:
     _openapi_schema = openapi_schema_base.copy()
     _openapi_schema["paths"] = {
         "/": {
@@ -39,7 +41,7 @@ def openapi_schema_simple(openapi_schema_base):
 
 
 @pytest.fixture(scope="module")
-def openapi_schema(openapi_schema_base):
+def openapi_schema(openapi_schema_base: dict[str, Any]) -> dict[str, Any]:
     _openapi_schema = openapi_schema_base.copy()
     _openapi_schema["components"]["schemas"].update(
         {
@@ -75,7 +77,7 @@ def openapi_schema(openapi_schema_base):
 
 
 @pytest.fixture(scope="module")
-def openapi_schema_single_exc(openapi_schema):
+def openapi_schema_single_exc(openapi_schema: dict[str, Any]) -> dict[str, Any]:
     _openapi_schema = openapi_schema.copy()
     _openapi_schema["paths"] = {
         "/{item_id}": {
@@ -123,7 +125,7 @@ def openapi_schema_single_exc(openapi_schema):
 
 
 @pytest.fixture(scope="module")
-def openapi_schema_multi_exc(openapi_schema):
+def openapi_schema_multi_exc(openapi_schema: dict[str, Any]) -> dict[str, Any]:
     _openapi_schema = openapi_schema.copy()
     _openapi_schema["paths"] = {
         "/": {
@@ -187,4 +189,239 @@ def openapi_schema_multi_exc(openapi_schema):
             }
         }
     }
+    return _openapi_schema
+
+
+@pytest.fixture(scope="module")
+def openapi_schema_components() -> dict[str, Any]:
+    return {
+        "schemas": {
+            "HTTPValidationError": {
+                "title": "HTTPValidationError",
+                "type": "object",
+                "properties": {
+                    "detail": {
+                        "title": "Detail",
+                        "type": "array",
+                        "items": {"$ref": "#/components/schemas/ValidationError"},
+                    }
+                },
+            },
+            "ValidationError": {
+                "title": "ValidationError",
+                "required": ["loc", "msg", "type"],
+                "type": "object",
+                "properties": {
+                    "loc": {
+                        "title": "Location",
+                        "type": "array",
+                        "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]},
+                    },
+                    "msg": {"title": "Message", "type": "string"},
+                    "type": {"title": "Error Type", "type": "string"},
+                },
+            },
+            "HTTPExceptionSchema": {
+                "title": "HTTPExceptionSchema",
+                "type": "object",
+                "properties": {"detail": {"title": "Detail", "type": "string"}},
+            },
+            "AppExecptionSchema": {
+                "title": "AppExecptionSchema",
+                "type": "object",
+                "properties": {
+                    "exception": {"title": "Exception", "type": "string"},
+                    "detail": {"title": "Detail", "type": "string"},
+                    "context": {"title": "Context", "type": "object"},
+                },
+            },
+        }
+    }
+
+
+@pytest.fixture(scope="module")
+def services_openapi_schema(
+    openapi_schema_base: dict[str, Any],
+    openapi_schema_components: dict[str, Any],
+) -> dict[str, Any]:
+    _openapi_schema = openapi_schema_base.copy()
+    _openapi_schema["paths"] = {
+        "/api/v1/": {
+            "get": {
+                "summary": "Get User",
+                "operationId": "get_user_api_v1__get",
+                "parameters": [
+                    {
+                        "required": True,
+                        "schema": {"title": "User In"},
+                        "name": "user_in",
+                        "in": "query",
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Response Get User Api V1  Get",
+                                    "type": "array",
+                                    "items": {},
+                                }
+                            }
+                        },
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        },
+                    },
+                    "500": {
+                        "description": "CreateFailed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AppExecptionSchema"
+                                }
+                            }
+                        },
+                    },
+                    "449": {
+                        "description": "RetryWith",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AppExecptionSchema"
+                                }
+                            }
+                        },
+                    },
+                    "444": {
+                        "description": "ConnectionClosed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AppExecptionSchema"
+                                }
+                            }
+                        },
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPExceptionSchema"
+                                }
+                            }
+                        },
+                    },
+                },
+            },
+            "post": {
+                "summary": "Create User",
+                "operationId": "create_user_api_v1__post",
+                "parameters": [
+                    {
+                        "required": True,
+                        "schema": {"title": "User In"},
+                        "name": "user_in",
+                        "in": "query",
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {"application/json": {"schema": {}}},
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        },
+                    },
+                    "500": {
+                        "description": "CreateFailed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AppExecptionSchema"
+                                }
+                            }
+                        },
+                    },
+                    "447": {
+                        "description": "TESTING ERROR 447",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPExceptionSchema"
+                                }
+                            }
+                        },
+                    },
+                    "445": {
+                        "description": "TESTING ERROR 2",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPExceptionSchema"
+                                }
+                            }
+                        },
+                    },
+                    "409": {
+                        "description": "TESTING ERROR",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPExceptionSchema"
+                                }
+                            }
+                        },
+                    },
+                    "449": {
+                        "description": "RetryWith",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AppExecptionSchema"
+                                }
+                            }
+                        },
+                    },
+                    "444": {
+                        "description": "ConnectionClosed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AppExecptionSchema"
+                                }
+                            }
+                        },
+                    },
+                    "400": {
+                        "description": "BAD REQUEST",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPExceptionSchema"
+                                }
+                            }
+                        },
+                    },
+                },
+            },
+        }
+    }
+    _openapi_schema["components"] = openapi_schema_components.copy()
     return _openapi_schema
