@@ -151,4 +151,4 @@ build-docs:
 
 .PHONY: deploy-docs
 deploy-docs:
-	${POETRY} run mkdocs gh-deploy
+	${POETRY} run mkdocs gh-deploy --force

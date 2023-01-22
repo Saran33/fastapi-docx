@@ -21,4 +21,4 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
           make -e poetry-install-flags='--only docs' venv-install
-          mkdocs gh-deploy --force
+          make deploy-docs
