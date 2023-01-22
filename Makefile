@@ -72,6 +72,14 @@ poetry-install:
 	${POETRY} config virtualenvs.prompt ${VENV_NAME} && \
 	${POETRY} install ${poetry-install-flags}
 
+.PHONY: poetry-build
+poetry-build:
+	@${POETRY} build
+
+.PHONY: poetry-publish
+poetry-publish:
+	@${POETRY} publish --build
+
 .PHONY: poetry-update
 poetry-update:
 	@${POETRY} update
@@ -95,6 +103,10 @@ poetry-remove:
 .PHONY: poetry-remove-dev
 poetry-remove-dev:
 	@${POETRY} remove --group dev ${PACKAGE}
+
+.PHONY: poetry-add-pypi-token
+poetry-add-pypi-token:
+	@${POETRY} config pypi-token.pypi ${PYPI_TOKEN}
 
 .PHONY: pre-commit-install
 pre-commit-install: venv-install
