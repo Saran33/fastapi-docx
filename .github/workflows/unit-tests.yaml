@@ -27,7 +27,33 @@ jobs:
       - run: make venv-install
       - run: make unit-tests-with-cov COV_REPORT_FORMAT=xml
       - name: Upload Coverage Report
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
-          name: coverage_upload
-          path: coverage_report
+          name: coverage
+          path: coverage
+
+  coverage-combine:
+    needs: [unit_tests]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.8'
+          cache: "pip"
+          cache-dependency-path: pyproject.toml
+      - name: Get coverage files
+        uses: actions/download-artifact@v3
+        with:
+          name: coverage
+          path: coverage
+      - run: pip install coverage[toml]
+      - run: ls -la coverage
+      - run: coverage combine coverage
+      - run: coverage report
+      - run: coverage html --show-contexts --title "Coverage for ${{ github.sha }}"
+      - name: Store coverage HTML
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-html
+          path: htmlcov
