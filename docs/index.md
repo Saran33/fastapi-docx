@@ -21,7 +21,7 @@
 
 ---
 
-**Documentation**: <a href="https://saran33.github.io/fastapi-docx/" target="_blank">https://saran33.github.io/fastapi-docx/</a>
+**Documentation**: <a href="https://saran33.github.io/fastapi-docx" target="_blank">https://saran33.github.io/fastapi-docx</a>
 
 **Source Code**: <a href="https://github.com/Saran33/fastapi-docx" target="_blank">https://github.com/Saran33/fastapi-docx</a>
 
