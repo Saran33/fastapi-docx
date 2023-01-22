@@ -24,6 +24,14 @@ classifiers = [
 python = "^3.10.1"
 fastapi = "^0.88.0"
 
+[tool.poetry.group.docs.dependencies]
+mkdocs = "^1.4.2"
+mkdocs-material = "^9.0.6"
+mdx-include = "^1.4.2"
+mkdocs-markdownextradata-plugin = "^0.2.5"
+pyyaml = "^6.0"
+typer = {extras = ["all"], version = "^0.7.0"}
+
 [tool.poetry.group.dev.dependencies]
 autoflake = "^2.0.0"
 black = "^22.12.0"
