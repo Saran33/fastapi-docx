@@ -111,7 +111,7 @@ app.openapi = custom_openapi(
 
 - Visiting <a href="http://localhost:8080/docs" class="external-link" target="_blank">http://localhost:8080/docs</a> (or whatever host and port your app is running on), should display the below documented responses:
 
-![custom exceptions example docs](../img/fastapi-docx_custom_exceptions_example.png)
+![custom exceptions example docs](https://saran33.github.io/fastapi-docx/img/fastapi-docx_custom_exceptions_example.png)
 
 !!! note
     For adding different schemas to the default `HTTPExcSchema` for `HTTPException` responses, see [Response Schemas](../response-schemas/index.md){.internal-link target=_blank}.

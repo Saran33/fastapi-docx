@@ -28,4 +28,4 @@ app.openapi = custom_openapi(app)
 
 - Visiting <a href="http://localhost:8080/docs" class="external-link" target="_blank">http://localhost:8080/docs</a> (or whatever host and port your app is running on), should display the below documented responses:
 
-![basic app example docs](../img/fastapi-docx_basic_example.png)
+![basic app example docs](https://saran33.github.io/fastapi-docx/img/fastapi-docx_basic_example.png)

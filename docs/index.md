@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://github.com/Saran33/fastapi-docx"><img src="../img/fastapi-docx-logo-teal.png" alt="FastAPI"></a>
+  <a href="https://github.com/Saran33/fastapi-docx"><img src="https://saran33.github.io/fastapi-docx/img/fastapi-docx-logo-teal.png" alt="FastAPI"></a>
 </p>
 <p align="center">
     <em>Add HTTPException responses to a FastAPI OpenAPI spec</em>
@@ -21,7 +21,7 @@
 
 ---
 
-**Documentation**: <a href="https://github.com/Saran33/fastapi-docx" target="_blank">https://github.com/Saran33/fastapi-docx</a>
+**Documentation**: <a href="https://saran33.github.io/fastapi-docx/" target="_blank">https://saran33.github.io/fastapi-docx/</a>
 
 **Source Code**: <a href="https://github.com/Saran33/fastapi-docx" target="_blank">https://github.com/Saran33/fastapi-docx</a>
 
