@@ -6,7 +6,7 @@ env:
   PRE_COMMIT_COLOR: "always"
 
 jobs:
-  pre_commit_hooks:
+  pre-commit-hooks:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
@@ -17,7 +17,7 @@ jobs:
       - run: make mypy
       - run: make pre-commit-run
 
-  unit_tests:
+  unit-tests:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
