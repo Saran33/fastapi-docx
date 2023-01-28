@@ -1,4 +1,4 @@
-name: Tests
+name: CI
 
 on: push
 
@@ -35,6 +35,7 @@ jobs:
   deploy-docs:
     needs: unit-tests
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
@@ -44,14 +45,15 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: coverage
-      - run: unzip coverage.zip
+          path: coverage_report
       - uses: actions/cache@v3
         with:
           path: .cache
           key: ${{ github.ref }}
       - name: Install docs dependencies
         if: steps.cache.outputs.cache-hit != 'true'
-        run: |
-          make -e poetry-install-flags='--only docs' venv-install
-          make coverage-badge
-          make deploy-docs
+        run: make -e poetry-install-flags='--only docs' venv-install
+      - name: Create coverage badge
+        run: make coverage-badge
+      - name: Deploy docs
+        run: make deploy-docs
