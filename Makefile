@@ -151,8 +151,8 @@ open-coverage-report:
 .PHONY: coverage-badge
 coverage-badge:
 	${POETRY} run genbadge coverage \
-	-i coverage/coverage.xml \
-	-o coverage/coverage-badge.svg
+	-i coverage_report/coverage.xml \
+	-o coverage_report/coverage-badge.svg
 
 .PHONY: serve-docs
 serve-docs:
@@ -165,9 +165,9 @@ build-docs:
 .PHONY: add-cov-to-docs
 add-cov-to-docs:
 	@if [ -d "coverage_report" ]; then \
-		rsync -avz --progress coverage/ docs/coverage/; \
+		rsync -avz --progress coverage_report/ docs/coverage/; \
 	else \
-		echo "coverage directory not found, skipping report copy"; \
+		echo "coverage_report directory not found, skipping report copy"; \
 	fi;
 
 .PHONY: deploy-docs
