@@ -11,7 +11,7 @@ def raise_exc():
     raise HTTPException(status_code=400, detail="Some exception")
 
 
-def get_user(opa: str = Depends(get_another_user)):
+def get_user():
     raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Unauthorized")
 
 
