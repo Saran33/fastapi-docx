@@ -44,7 +44,6 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: coverage
-      - run: unzip coverage
       - uses: actions/cache@v3
         with:
           path: .cache
