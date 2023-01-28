@@ -51,7 +51,8 @@ jobs:
           key: ${{ github.ref }}
       - name: Install docs dependencies
         if: steps.cache.outputs.cache-hit != 'true'
-        run: |
-          make -e poetry-install-flags='--only docs' venv-install
-          make coverage-badge
-          make deploy-docs
+        run: make -e poetry-install-flags='--only docs' venv-install
+      - name: Create coverage badge
+        run: make coverage-badge
+      - name: Deploy docs
+        run: make deploy-docs

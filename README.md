@@ -10,8 +10,8 @@
 <a href="https://github.com/saran33/fastapi-docx/actions?query=workflow%3ACI+event%3Apush+branch%3Amain" target="_blank">
     <img src="https://github.com/saran33/fastapi-docx/workflows/CI/badge.svg?event=push&branch=main" alt="CI">
 </a>
-<a href="https://saran33.github.io/fastapi-docx/coverage_report/coverage.html" target="_blank">
-    <img src="https://saran33.github.io/fastapi-docx/coverage_report/coverage-badge.svg" alt="Coverage">
+<a href="https://saran33.github.io/fastapi-docx/coverage/coverage.html" target="_blank">
+    <img src="https://saran33.github.io/fastapi-docx/coverage/coverage-badge.svg" alt="Coverage">
 </a>
 <a href="https://pypi.org/project/fastapi-docx" target="_blank">
     <img src="https://img.shields.io/pypi/v/fastapi-docx?color=%2334D058&label=pypi%20package" alt="Package version">
