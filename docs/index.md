@@ -5,8 +5,8 @@
     <em>Add HTTPException responses to a FastAPI OpenAPI spec</em>
 </p>
 <p align="center">
-<a href="https://github.com/saran33/fastapi-docx/actions?query=workflow%3ATests+event%3Apush+branch%3Amain" target="_blank">
-    <img src="https://github.com/saran33/fastapi-docx/workflows/Tests/badge.svg?event=push&branch=main" alt="Tests">
+<a href="https://github.com/saran33/fastapi-docx/actions?query=workflow%3ACI+event%3Apush+branch%3Amain" target="_blank">
+    <img src="https://github.com/saran33/fastapi-docx/workflows/CI/badge.svg?event=push&branch=main" alt="CI">
 </a>
 <a href="coverage_report/coverage.html" target="_blank">
     <img src="coverage_report/coverage-badge.svg" alt="Coverage">
