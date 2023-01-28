@@ -33,6 +33,7 @@ help:
 	@echo "  poetry-update-lock   Update dependencies lock"
 	@echo "  poetry-add           Add dependency"
 	@echo "  poetry-add-dev       Add dev dependency"
+	@echo "  poetry-add-docs      Add docs dependency"
 	@echo "  poetry-remove        Remove dependency"
 	@echo "  poetry-remove-dev    Remove dev dependency"
 
@@ -46,9 +47,11 @@ help:
 	@echo "  unit-tests           Run unit tests"
 	@echo "  unit-tests-with-cov  Run unit tests with coverage"
 	@echo "  open-coverage-report Open html coverage report"
+	@echo "  coverage-badge       Generate coverage badge"
 
 	@echo "  serve-docs 		  Serve documentation"
 	@echo "  build-docs 		  Build documentation"
+	@echo "  add-cov-to-docs 	  Add coverage to docs"
 	@echo "  deploy-docs 		  Deploy documentation"
 
 
@@ -96,6 +99,10 @@ poetry-add:
 poetry-add-dev:
 	@${POETRY} add --group dev ${PACKAGE}
 
+.PHONY: poetry-add-docs
+poetry-add-docs:
+	@${POETRY} add --group docs ${PACKAGE}
+
 .PHONY: poetry-remove
 poetry-remove:
 	@${POETRY} remove ${PACKAGE}
@@ -131,15 +138,21 @@ lint: mypy pre-commit-run
 unit-tests: venv-install
 	${POETRY} run pytest ./tests/unit_tests -n auto
 
-COV_REPORT_FORMAT?=xml
 .PHONY: unit-tests-with-cov
 unit-tests-with-cov: venv-install
-	${POETRY} run pytest ./tests/unit_tests --cov --cov-config=setup.cfg --cov-report ${COV_REPORT_FORMAT} -n auto
+	${POETRY} run pytest ./tests/unit_tests --cov \
+	--cov-config=setup.cfg --cov-report xml --cov-report html -n auto
 
 .PHONY: open-coverage-report
 open-coverage-report:
 	cd coverage_report/coverage.html && \
 	open -a index.html
+
+.PHONY: coverage-badge
+coverage-badge:
+	${POETRY} run genbadge coverage \
+	-i coverage_report/coverage.xml \
+	-o coverage_report/coverage-badge.svg
 
 .PHONY: serve-docs
 serve-docs:
@@ -149,6 +162,14 @@ serve-docs:
 build-docs:
 	${POETRY} run mkdocs build
 
+.PHONY: add-cov-to-docs
+add-cov-to-docs:
+	@if [ -d "coverage_report" ]; then \
+		rsync -avz --progress coverage_report/ docs/coverage_report/; \
+	else \
+		echo "coverage_report directory not found, skipping report copy"; \
+	fi;
+
 .PHONY: deploy-docs
-deploy-docs:
+deploy-docs: add-cov-to-docs
 	${POETRY} run mkdocs gh-deploy --force

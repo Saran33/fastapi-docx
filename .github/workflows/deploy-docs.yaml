@@ -21,4 +21,5 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
           make -e poetry-install-flags='--only docs' venv-install
+          make coverage-badge
           make deploy-docs
