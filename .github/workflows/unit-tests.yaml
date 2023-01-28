@@ -44,7 +44,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: coverage
-      - run: unzip /home/runner/work/fastapi-docx/fastapi-docx/coverage.zip
+      - run: unzip coverage
       - uses: actions/cache@v3
         with:
           path: .cache
