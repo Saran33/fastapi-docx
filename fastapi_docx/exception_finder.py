@@ -216,7 +216,11 @@ class RouteExcFinder:
                     and hasattr(kwarg.func, "id")
                     and kwarg.func.id == "Depends"
                 ):
-                    if method := kwarg.args[0] if hasattr(kwarg, "args") else None:
+                    if (
+                        method := kwarg.args[0]
+                        if hasattr(kwarg, "args") and kwarg.args
+                        else None
+                    ):
                         cls = None
                         if hasattr(method, "value") and hasattr(method.value, "id"):
                             try:
@@ -248,12 +252,18 @@ class RouteExcFinder:
                     module,
                     raise_stmt.exc.func.value.id,
                 )
-                http_exc = getattr(outer_exc_class, raise_stmt.exc.func.attr)
+                try:
+                    http_exc = getattr(outer_exc_class, raise_stmt.exc.func.attr)
+                except AttributeError:
+                    return None
                 if is_subclass_of_any(http_exc, self.exceptions_to_find):
                     http_exec_instance = create_exc_instance(http_exc)
                     return http_exec_instance
-
-            elif http_exc := getattr(module, raise_stmt.exc.func.id):
+            else:
+                try:
+                    http_exc = getattr(module, raise_stmt.exc.func.id)
+                except AttributeError:
+                    return None
                 if is_subclass_of_any(http_exc, self.exceptions_to_find):
                     try:
                         http_exec_instance = eval_ast_exc_instance(
