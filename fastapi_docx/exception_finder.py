@@ -112,7 +112,8 @@ class RouteExcFinder:
     def find_functions(route: Callable) -> list[Callable]:
         _functions = []
         func = getattr(route, "endpoint", route)
-        source = inspect.getsource(func)
+        unwrapped = inspect.unwrap(func)
+        source = textwrap.dedent(inspect.getsource(unwrapped))
         tree = ast.parse(source)
         module = importlib.import_module(func.__module__)
         for node in ast.walk(tree):
@@ -248,11 +249,11 @@ class RouteExcFinder:
         if raise_stmt.exc and hasattr(raise_stmt.exc, "func"):
 
             if hasattr(raise_stmt.exc.func, "attr"):
-                outer_exc_class = getattr(
-                    module,
-                    raise_stmt.exc.func.value.id,
-                )
                 try:
+                    outer_exc_class = getattr(
+                        module,
+                        raise_stmt.exc.func.value.id,
+                    )
                     http_exc = getattr(outer_exc_class, raise_stmt.exc.func.attr)
                 except AttributeError:
                     return None
