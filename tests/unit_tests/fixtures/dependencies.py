@@ -66,8 +66,8 @@ class UserDeps(AppDeps):
             )
         if not user:
             raise HTTPException(status_code=404, detail="User not found")
-        if user["name"] == "bot":
-            raise TooManyRequests(context=user)
+        if user == "bot":
+            raise TooManyRequests(context={"name": "Person", "id": 2})
         return user
 
     @staticmethod

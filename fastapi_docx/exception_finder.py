@@ -57,19 +57,19 @@ def is_callable_instance(obj: object) -> bool:
     return hasattr(obj, "__call__") and not isinstance(obj, type)
 
 
-def is_annotated_alias(annot):
+def is_annotated_alias(annot: Any) -> bool:
     _AnnotatedAlias = getattr(typing, "_AnnotatedAlias")
     return isinstance(annot, _AnnotatedAlias)
 
 
-def get_annotated_dependency(annot):
+def get_annotated_dependency(annot: Any) -> Callable | None:
+    dependency: Callable | None = None
     if is_annotated_alias(annot):
         annot_args = typing.get_args(annot)
         annot_dep = annot_args[1] if len(annot_args) > 1 else None
         if annot_dep and annot_dep.__class__.__name__ == "Depends":
             dependency = getattr(annot_dep, "dependency", None)
-            return dependency
-    return None
+    return dependency
 
 
 def create_exc_instance(
@@ -227,36 +227,39 @@ class RouteExcFinder:
         source = inspect.getsource(func)
         tree = ast.parse(source)
 
-        for node in find_nodes(tree, (ast.FunctionDef, ast.AsyncFunctionDef)):
-            for kwarg in chain(node.args.defaults, node.args.kw_defaults):
-                if (
-                    kwarg
-                    and hasattr(kwarg, "func")
-                    and hasattr(kwarg.func, "id")
-                    and kwarg.func.id == "Depends"
-                ):
+        for node in chain(
+            find_nodes(tree, ast.FunctionDef), find_nodes(tree, ast.AsyncFunctionDef)
+        ):
+            if hasattr(node, "args"):
+                for kwarg in chain(node.args.defaults, node.args.kw_defaults):
                     if (
-                        method := kwarg.args[0]
-                        if hasattr(kwarg, "args") and kwarg.args
-                        else None
+                        kwarg
+                        and hasattr(kwarg, "func")
+                        and hasattr(kwarg.func, "id")
+                        and kwarg.func.id == "Depends"
                     ):
-                        cls = None
-                        if hasattr(method, "value") and hasattr(method.value, "id"):
-                            try:
-                                cls = getattr(module, method.value.id)
-                            except (AttributeError, NameError):
-                                ...
-                        elif hasattr(method, "id"):
-                            try:
-                                cls = getattr(module, method.id)
-                            except (AttributeError, NameError):
-                                ...
-                        if cls:
-                            _exceptions = self.search_method_for_excs(
-                                cls, method, self.dependencyClasses
-                            )
-                            if _exceptions:
-                                exceptions.extend(_exceptions)
+                        if (
+                            method := kwarg.args[0]
+                            if hasattr(kwarg, "args") and kwarg.args
+                            else None
+                        ):
+                            cls = None
+                            if hasattr(method, "value") and hasattr(method.value, "id"):
+                                try:
+                                    cls = getattr(module, method.value.id)
+                                except (AttributeError, NameError):
+                                    ...
+                            elif hasattr(method, "id"):
+                                try:
+                                    cls = getattr(module, method.id)
+                                except (AttributeError, NameError):
+                                    ...
+                            if cls:
+                                _exceptions = self.search_method_for_excs(
+                                    cls, method, self.dependencyClasses
+                                )
+                                if _exceptions:
+                                    exceptions.extend(_exceptions)
         return exceptions
 
     def find_annotated_dependency_exceptions(
@@ -270,22 +273,27 @@ class RouteExcFinder:
         source = inspect.getsource(func)
         tree = ast.parse(source)
 
-        for node in find_nodes(tree, (ast.FunctionDef, ast.AsyncFunctionDef)):
-            for kwarg in getattr(node.args, "kwonlyargs", []):
-                if kwarg and hasattr(kwarg, "annotation"):
-                    if (
-                        annot := kwarg.annotation.id
-                        if hasattr(kwarg.annotation, "id") and kwarg.annotation.id
-                        else None
-                    ):
-                        cls = None
-                        try:
-                            cls = getattr(module, annot)
-                        except (AttributeError, NameError):
-                            ...
-                        if cls and (dependency := get_annotated_dependency(cls)):
-                            if _exceptions := self.find_exceptions(dependency, module):
-                                exceptions.extend(_exceptions)
+        for node in chain(
+            find_nodes(tree, ast.FunctionDef), find_nodes(tree, ast.AsyncFunctionDef)
+        ):
+            if hasattr(node, "args"):
+                for kwarg in getattr(node.args, "kwonlyargs", []):
+                    if kwarg and hasattr(kwarg, "annotation"):
+                        if (
+                            annot := kwarg.annotation.id
+                            if hasattr(kwarg.annotation, "id") and kwarg.annotation.id
+                            else None
+                        ):
+                            cls = None
+                            try:
+                                cls = getattr(module, annot)
+                            except (AttributeError, NameError):
+                                ...
+                            if cls and (dependency := get_annotated_dependency(cls)):
+                                if _exceptions := self.find_exceptions(
+                                    dependency, module
+                                ):
+                                    exceptions.extend(_exceptions)
         return exceptions
 
     def create_exc_inst_from_raise_stmt(
