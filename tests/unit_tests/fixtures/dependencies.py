@@ -15,6 +15,11 @@ class Session:
         self.bind = None
 
 
+class User:
+    def __init__(self, id: int = 1):
+        self.id = id
+
+
 class DbDeps(AppDeps):
     @staticmethod
     def get_db() -> Generator:
@@ -39,6 +44,21 @@ class UserDeps(AppDeps):
     def get_current_user() -> dict[str, Any]:
         try:
             user = UserDeps.user
+        except Exception:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Could not validate credentials",
+            )
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+        if user["name"] == "bot":
+            raise TooManyRequests(context=user)
+        return user
+
+    @staticmethod
+    async def get_current_user_obj() -> User:
+        try:
+            user = User()
         except Exception:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,

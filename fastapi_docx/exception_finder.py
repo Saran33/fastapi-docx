@@ -209,7 +209,7 @@ class RouteExcFinder:
         source = inspect.getsource(func)
         tree = ast.parse(source)
 
-        for node in find_nodes(tree, ast.FunctionDef):
+        for node in find_nodes(tree, (ast.FunctionDef, ast.AsyncFunctionDef)):
             for kwarg in chain(node.args.defaults, node.args.kw_defaults):
                 if (
                     kwarg
