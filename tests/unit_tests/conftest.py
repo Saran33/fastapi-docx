@@ -95,7 +95,14 @@ def openapi_schema_single_exc(openapi_schema: dict[str, Any]) -> dict[str, Any]:
                 "responses": {
                     "200": {
                         "description": "Successful Response",
-                        "content": {"application/json": {"schema": {}}},
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Response Get Item  Item Id  Get",
+                                    "type": "string",
+                                }
+                            }
+                        },
                     },
                     "422": {
                         "description": "Validation Error",
