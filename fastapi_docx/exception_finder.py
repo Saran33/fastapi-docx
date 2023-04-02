@@ -2,6 +2,7 @@ import ast
 import importlib
 import inspect
 import textwrap
+import typing
 from collections.abc import Callable, Generator, Iterable
 from itertools import chain
 from types import ModuleType
@@ -56,6 +57,21 @@ def is_callable_instance(obj: object) -> bool:
     return hasattr(obj, "__call__") and not isinstance(obj, type)
 
 
+def is_annotated_alias(annot):
+    _AnnotatedAlias = getattr(typing, "_AnnotatedAlias")
+    return isinstance(annot, _AnnotatedAlias)
+
+
+def get_annotated_dependency(annot):
+    if is_annotated_alias(annot):
+        annot_args = typing.get_args(annot)
+        annot_dep = annot_args[1] if len(annot_args) > 1 else None
+        if annot_dep and annot_dep.__class__.__name__ == "Depends":
+            dependency = getattr(annot_dep, "dependency", None)
+            return dependency
+    return None
+
+
 def create_exc_instance(
     exc_class: type[Exception], exc_args: list[Any] | None = None
 ) -> Exception | None:
@@ -104,6 +120,8 @@ class RouteExcFinder:
             self.exceptions.extend(self.find_exceptions(function))
         if self.dependencyClasses:
             self.exceptions += self.find_dependency_exceptions(route)
+        if self.dependencyClasses:
+            self.exceptions += self.find_annotated_dependency_exceptions(route)
         if self.serviceClasses:
             self.exceptions += self.find_service_exceptions(route)
         return self.exceptions
@@ -238,6 +256,35 @@ class RouteExcFinder:
                                 cls, method, self.dependencyClasses
                             )
                             if _exceptions:
+                                exceptions.extend(_exceptions)
+        return exceptions
+
+    def find_annotated_dependency_exceptions(
+        self,
+        route: APIRoute | Callable,
+    ) -> list[HTTPException]:
+        exceptions = []
+        assert self.dependencyClasses is not None
+        func = route.endpoint if hasattr(route, "endpoint") else route
+        module = inspect.getmodule(func)
+        source = inspect.getsource(func)
+        tree = ast.parse(source)
+
+        for node in find_nodes(tree, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            for kwarg in getattr(node.args, "kwonlyargs", []):
+                if kwarg and hasattr(kwarg, "annotation"):
+                    if (
+                        annot := kwarg.annotation.id
+                        if hasattr(kwarg.annotation, "id") and kwarg.annotation.id
+                        else None
+                    ):
+                        cls = None
+                        try:
+                            cls = getattr(module, annot)
+                        except (AttributeError, NameError):
+                            ...
+                        if cls and (dependency := get_annotated_dependency(cls)):
+                            if _exceptions := self.find_exceptions(dependency, module):
                                 exceptions.extend(_exceptions)
         return exceptions
 

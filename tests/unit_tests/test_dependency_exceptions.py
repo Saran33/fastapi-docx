@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Annotated, Any
 
 from fastapi import APIRouter, Depends, FastAPI
 
@@ -13,11 +13,11 @@ from tests.unit_tests.setup import OpenApiTest
 
 router = APIRouter()
 
+UserDict = Annotated[dict[str, Any], Depends(UserDeps.get_current_user)]
+
 
 @router.get("/me")
-def get_user(
-    *, user_in, current_user: dict[str, Any] = Depends(UserDeps.get_current_user)
-):
+def get_user(*, user_in, current_user: UserDict):
     result = UserService.get_authenticated(user_in)
     return result
 
