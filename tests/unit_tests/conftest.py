@@ -173,7 +173,7 @@ def openapi_schema_multi_exc(openapi_schema: dict[str, Any]) -> dict[str, Any]:
                         },
                     },
                     "201": {
-                        "description": "GET USER FAIL",
+                        "description": "GET <OBJ_NAME> FAIL <400 + 4>",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -183,7 +183,7 @@ def openapi_schema_multi_exc(openapi_schema: dict[str, Any]) -> dict[str, Any]:
                         },
                     },
                     "500": {
-                        "description": "Get another user",
+                        "description": "<'Get another user: '> + <msg>",
                         "content": {
                             "application/json": {
                                 "schema": {

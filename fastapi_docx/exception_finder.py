@@ -80,10 +80,60 @@ def create_exc_instance(
     return value if isinstance(value, Exception) else None
 
 
+def replace_binops(node: ast.AST) -> None:
+    """Replace binary addition operations with their string representation."""
+    for name, field in ast.iter_fields(node):
+        if isinstance(field, list):
+            for i, item in enumerate(field):
+                if isinstance(item, ast.BinOp) and isinstance(item.op, ast.Add):
+                    field[i] = ast.Constant(
+                        value=f"<{ast.unparse(item.left)}> + <{ast.unparse(item.right)}>"
+                    )
+                else:
+                    replace_binops(item)
+        elif isinstance(field, ast.AST):
+            if isinstance(field, ast.BinOp) and isinstance(field.op, ast.Add):
+                setattr(
+                    node,
+                    name,
+                    ast.Constant(
+                        value=f"<{ast.unparse(field.left)}> + <{ast.unparse(field.right)}>"
+                    ),
+                )
+            else:
+                replace_binops(field)
+
+
+def replace_formatted_values(node: ast.AST) -> None:
+    """Replace formatted values with their string representation."""
+    for name, field in ast.iter_fields(node):
+        if isinstance(field, list):
+            for i, item in enumerate(field):
+                if isinstance(item, ast.FormattedValue):
+                    field[i] = ast.Constant(
+                        value=f"<{ast.unparse(item.value).upper()}>"
+                    )
+                else:
+                    replace_formatted_values(item)
+                    replace_binops(item)
+        elif isinstance(field, ast.AST):
+            if isinstance(field, ast.FormattedValue):
+                setattr(
+                    node,
+                    name,
+                    ast.Constant(value=f"<{ast.unparse(field.value).upper()}>"),
+                )
+            else:
+                replace_formatted_values(field)
+                replace_binops(field)
+    return None
+
+
 def eval_ast_exc_instance(
     exc_class: type[Exception], ast_exec_inst: ast.expr
 ) -> Exception | None:
     importlib.import_module(exc_class.__module__)
+    replace_formatted_values(ast_exec_inst)
     value = eval(ast.unparse(ast_exec_inst))
     return value if isinstance(value, Exception) else None
 
@@ -302,7 +352,6 @@ class RouteExcFinder:
         module: ModuleType | type,
     ) -> Exception | None:
         if raise_stmt.exc and hasattr(raise_stmt.exc, "func"):
-
             if hasattr(raise_stmt.exc.func, "attr"):
                 try:
                     outer_exc_class = getattr(

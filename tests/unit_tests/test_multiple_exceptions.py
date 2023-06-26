@@ -10,11 +10,13 @@ def raise_another():
 
 
 async def get_another_user():
-    raise HTTPException(status_code=500, detail="Get another user")
+    msg = "Get user fail"
+    raise HTTPException(status_code=500, detail="Get another user: " + msg)
 
 
 def get_user(opa: str = Depends(get_another_user)):
-    raise HTTPException(status_code=201, detail="GET USER FAIL")
+    obj_name = "USER"
+    raise HTTPException(status_code=201, detail=f"GET {obj_name} FAIL {400+4}")
 
 
 @app.get("/")
