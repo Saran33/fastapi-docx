@@ -1,9 +1,9 @@
 from typing import Any, TypeVar
 
-from fastapi.openapi.constants import REF_PREFIX
+from fastapi.openapi.constants import REF_TEMPLATE
 from fastapi.routing import APIRoute
 from pydantic import BaseModel
-from pydantic.schema import model_schema
+from pydantic.json_schema import GenerateJsonSchema
 from starlette.exceptions import HTTPException
 
 from fastapi_docx.exception_finder import ErrType
@@ -17,13 +17,14 @@ class HTTPExceptionSchema(BaseModel):
 
 def get_model_definition(model: type[BaseModel]) -> tuple[str, dict[str, Any]]:
     model_name = model.__name__
-    m_schema = model_schema(model, ref_prefix=REF_PREFIX)
+    schema_generator = GenerateJsonSchema(by_alias=True, ref_template=REF_TEMPLATE)
+    m_schema = schema_generator.generate(model.__pydantic_core_schema__, mode="serialization")
     if "description" in m_schema:
         m_schema["description"] = m_schema["description"].split("\f")[0]
     return model_name, m_schema
 
 
-def add_model_to_openapi(api_schema: dict[str, Any], model: BaseModel) -> None:
+def add_model_to_openapi(api_schema: dict[str, Any], model: type[BaseModel]) -> None:
     model_name, m_schema = get_model_definition(model)
     if "components" not in api_schema:
         api_schema["components"] = {"schemas": {}}

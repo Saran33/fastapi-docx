@@ -1,5 +1,5 @@
 from collections.abc import Generator
-from typing import Any
+from typing import Annotated, Any
 
 from fastapi import Depends, HTTPException, status
 
@@ -89,6 +89,7 @@ class UserDeps(AppDeps):
             raise HTTPException(status_code=407, detail="Some other error")
         return user
 
+CurrentUser = Annotated[dict[str, Any], Depends(UserDeps.get_current_user)]
 
 class CallableDep:
     def __init__(self, arg: str):

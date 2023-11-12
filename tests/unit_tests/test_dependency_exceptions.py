@@ -7,17 +7,15 @@ from tests.unit_tests.fixtures.custom_exceptions import (
     AppExecptionSchema,
     app_exception_handler,
 )
-from tests.unit_tests.fixtures.dependencies import AppDeps, CallableDep, User, UserDeps
+from tests.unit_tests.fixtures.dependencies import AppDeps, CallableDep, User, UserDeps, CurrentUser
 from tests.unit_tests.fixtures.services import AppService, UserService
 from tests.unit_tests.setup import OpenApiTest
 
 router = APIRouter()
 
-UserDict = Annotated[dict[str, Any], Depends(UserDeps.get_current_user)]
-
 
 @router.get("/me")
-def get_user(*, user_in, current_user: UserDict):
+def get_user(*, user_in, current_user: CurrentUser):
     result = UserService.get_authenticated(user_in)
     return result
 
