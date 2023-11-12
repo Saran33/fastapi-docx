@@ -99,3 +99,5 @@ dmypy.json
 
 # generated responses from test fails
 *.json
+
+.DS_Store
