@@ -37,5 +37,9 @@ The key features are:
 * **Include Custom Exceptions**: Optionally find and document any custom Exception types if using custom Exception handlers in your FastAPI application.
 * **Generate Exception schemas**: A default `HTTPExceptionSchema` will be added to the OpenAPI specification. The default can be modified to use any other [Pydantic](*https://github.com/pydantic/pydantic) model. An additional schema for app-specific custom Exceptions can also be included.
 
+
+##### Dependencies
+* [Pydantic V2](https://github.com/pydantic/pydantic): From version 1.0 of fastapi-docx, Pydantic V2 is required. For Pydantic V1 support, use fastapi-docx version 0.2.
+
 ##### License
 This project is licensed under the terms of the MIT license.
