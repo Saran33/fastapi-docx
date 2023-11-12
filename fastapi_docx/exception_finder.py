@@ -50,7 +50,7 @@ def is_subclass_of_any(klass: type, classes: Iterable[type] | Iterable[str]) -> 
         class_names = classes
     else:
         class_names = [cls.__name__ for cls in classes if hasattr(cls, "__name__")]
-    return any(base_name in class_names for base_name in base_names)
+    return any(base_name in class_names for base_name in base_names)  # type: ignore
 
 
 def is_callable_instance(obj: object) -> bool:

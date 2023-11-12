@@ -99,3 +99,7 @@ dmypy.json
 
 # generated responses from test fails
 *.json
+!**/unit_tests/*.json
+
+.DS_Store
+log.txt

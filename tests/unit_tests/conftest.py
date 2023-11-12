@@ -6,14 +6,20 @@ import pytest
 @pytest.fixture(scope="module")
 def openapi_schema_base() -> dict[str, Any]:
     return {
-        "openapi": "3.0.2",
+        "openapi": "3.1.0",
         "info": {"title": "FastAPI", "version": "0.1.0"},
         "components": {
             "schemas": {
                 "HTTPExceptionSchema": {
+                    "properties": {
+                        "detail": {
+                            "anyOf": [{"type": "string"}, {"type": "null"}],
+                            "default": None,
+                            "title": "Detail",
+                        }
+                    },
                     "title": "HTTPExceptionSchema",
                     "type": "object",
-                    "properties": {"detail": {"title": "Detail", "type": "string"}},
                 }
             }
         },
@@ -204,43 +210,61 @@ def openapi_schema_components() -> dict[str, Any]:
     return {
         "schemas": {
             "HTTPValidationError": {
-                "title": "HTTPValidationError",
-                "type": "object",
                 "properties": {
                     "detail": {
-                        "title": "Detail",
-                        "type": "array",
                         "items": {"$ref": "#/components/schemas/ValidationError"},
+                        "type": "array",
+                        "title": "Detail",
                     }
                 },
+                "type": "object",
+                "title": "HTTPValidationError",
             },
             "ValidationError": {
-                "title": "ValidationError",
-                "required": ["loc", "msg", "type"],
-                "type": "object",
                 "properties": {
                     "loc": {
-                        "title": "Location",
-                        "type": "array",
                         "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]},
+                        "type": "array",
+                        "title": "Location",
                     },
-                    "msg": {"title": "Message", "type": "string"},
-                    "type": {"title": "Error Type", "type": "string"},
+                    "msg": {"type": "string", "title": "Message"},
+                    "type": {"type": "string", "title": "Error Type"},
                 },
+                "type": "object",
+                "required": ["loc", "msg", "type"],
+                "title": "ValidationError",
             },
             "HTTPExceptionSchema": {
+                "properties": {
+                    "detail": {
+                        "anyOf": [{"type": "string"}, {"type": "null"}],
+                        "default": None,
+                        "title": "Detail",
+                    }
+                },
                 "title": "HTTPExceptionSchema",
                 "type": "object",
-                "properties": {"detail": {"title": "Detail", "type": "string"}},
             },
             "AppExecptionSchema": {
+                "properties": {
+                    "exception": {
+                        "anyOf": [{"type": "string"}, {"type": "null"}],
+                        "default": None,
+                        "title": "Exception",
+                    },
+                    "detail": {
+                        "anyOf": [{"type": "string"}, {"type": "null"}],
+                        "default": None,
+                        "title": "Detail",
+                    },
+                    "context": {
+                        "anyOf": [{"type": "object"}, {"type": "null"}],
+                        "default": None,
+                        "title": "Context",
+                    },
+                },
                 "title": "AppExecptionSchema",
                 "type": "object",
-                "properties": {
-                    "exception": {"title": "Exception", "type": "string"},
-                    "detail": {"title": "Detail", "type": "string"},
-                    "context": {"title": "Context", "type": "object"},
-                },
             },
         }
     }
@@ -677,5 +701,6 @@ def dependencies_openapi_schema(
             },
         }
     }
+
     _openapi_schema["components"] = openapi_schema_components.copy()
     return _openapi_schema

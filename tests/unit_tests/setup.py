@@ -38,8 +38,10 @@ class OpenApiTest:
 
             import json
 
-            with open(f"test_fail_response_{self.__class__.__name__}.json", "w") as f:
+            with open(f"{self.__class__.__name__}_test_fail_response.json", "w") as f:
                 json.dump(response_schema, f)
+            with open(f"{self.__class__.__name__}_expected.json", "w") as f:
+                json.dump(expected_schema, f)
 
             assert False
 
