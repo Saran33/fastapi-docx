@@ -18,7 +18,9 @@ class HTTPExceptionSchema(BaseModel):
 def get_model_definition(model: type[BaseModel]) -> tuple[str, dict[str, Any]]:
     model_name = model.__name__
     schema_generator = GenerateJsonSchema(by_alias=True, ref_template=REF_TEMPLATE)
-    m_schema = schema_generator.generate(model.__pydantic_core_schema__, mode="serialization")
+    m_schema = schema_generator.generate(
+        model.__pydantic_core_schema__, mode="serialization"
+    )
     if "description" in m_schema:
         m_schema["description"] = m_schema["description"].split("\f")[0]
     return model_name, m_schema

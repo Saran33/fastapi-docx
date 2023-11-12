@@ -1,5 +1,3 @@
-from typing import Annotated, Any
-
 from fastapi import APIRouter, Depends, FastAPI
 
 from tests.unit_tests.fixtures.custom_exceptions import (
@@ -7,7 +5,13 @@ from tests.unit_tests.fixtures.custom_exceptions import (
     AppExecptionSchema,
     app_exception_handler,
 )
-from tests.unit_tests.fixtures.dependencies import AppDeps, CallableDep, User, UserDeps, CurrentUser
+from tests.unit_tests.fixtures.dependencies import (
+    AppDeps,
+    CallableDep,
+    CurrentUser,
+    User,
+    UserDeps,
+)
 from tests.unit_tests.fixtures.services import AppService, UserService
 from tests.unit_tests.setup import OpenApiTest
 
