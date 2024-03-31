@@ -40,17 +40,26 @@ def is_function_or_coroutine(obj: Any) -> bool:
 
 
 def is_subclass_of_any(klass: type, classes: Iterable[type] | Iterable[str]) -> bool:
-    base_names = (
-        [base.__name__ for base in klass.__bases__]
-        if hasattr(klass, "__bases__")
-        else []
-    )
-    base_names.append(type(klass).__name__)
-    if all(isinstance(cls, str) for cls in classes):
-        class_names = classes
-    else:
-        class_names = [cls.__name__ for cls in classes if hasattr(cls, "__name__")]
-    return any(base_name in class_names for base_name in base_names)  # type: ignore
+    try:
+        base_names = (
+            [base.__name__ for base in klass.__bases__]
+            if hasattr(klass, "__bases__")
+            else []
+        )
+        base_names.append(type(klass).__name__)
+        if all(isinstance(cls, str) for cls in classes):
+            class_names = classes
+        else:
+            class_names = [
+                cls.__name__  # pyright: ignore
+                for cls in classes
+                if hasattr(cls, "__name__")
+            ]
+        return any(
+            base_name in class_names for base_name in base_names  # pyright: ignore
+        )
+    except RuntimeError:
+        return False
 
 
 def is_callable_instance(obj: object) -> bool:
