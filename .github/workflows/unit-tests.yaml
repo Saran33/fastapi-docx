@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: setup python
         uses: ./.github/actions/setup-python
       - run: make venv-install
@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: setup python
         uses: ./.github/actions/setup-python
       - run: make venv-install
@@ -37,10 +37,11 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
+      - name: setup python
+        uses: ./.github/actions/setup-python
         with:
-          python-version: "3.10"
+          python_version: "3.10"
       - name: Download Coverage Report
         uses: actions/download-artifact@v3
         with:
