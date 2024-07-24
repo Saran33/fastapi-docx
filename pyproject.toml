@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "fastapi-docx"
-version = "1.0.1"
+version = "1.0.2"
 description = "Extend a FastAPI OpenAPI spec to include all possible HTTPException or custom Exception response schemas."
 authors = ["Saran Connolly <saran@example.com>"]
 readme = "README.md"
@@ -22,7 +22,7 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = ">=3.10,<4.0.0"
-fastapi = "^0.104.1"
+fastapi = ">=0.104.1,<=0.111.1"
 pydantic = "^2.4.2"
 
 [tool.poetry.group.docs.dependencies]
@@ -31,7 +31,7 @@ mkdocs-material = "^9.0.6"
 mdx-include = "^1.4.2"
 mkdocs-markdownextradata-plugin = "^0.2.5"
 pyyaml = "^6.0"
-typer = { extras = ["all"], version = "^0.7.0" }
+typer = { extras = ["all"], version = "^0.12.3" }
 genbadge = { extras = ["coverage"], version = "^1.1.0" }
 
 [tool.poetry.group.dev.dependencies]
