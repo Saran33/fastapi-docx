@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+         <loc>https://github.com/Saran33/fastapi-docx/</loc>
+         <lastmod>2024-07-24</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://github.com/Saran33/fastapi-docx/getting-started/</loc>
+         <lastmod>2024-07-24</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://github.com/Saran33/fastapi-docx/custom-exceptions/</loc>
+         <lastmod>2024-07-24</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://github.com/Saran33/fastapi-docx/find-exception-responses/dependency-or-service-classes/</loc>
+         <lastmod>2024-07-24</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://github.com/Saran33/fastapi-docx/find-exception-responses/overview/</loc>
+         <lastmod>2024-07-24</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://github.com/Saran33/fastapi-docx/response-schemas/</loc>
+         <lastmod>2024-07-24</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+</urlset>
