@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "fastapi-docx"
-version = "1.0.2"
+version = "1.0.3"
 description = "Extend a FastAPI OpenAPI spec to include all possible HTTPException or custom Exception response schemas."
 authors = ["Saran Connolly <saran@example.com>"]
 readme = "README.md"
